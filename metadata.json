@@ -1,0 +1,9 @@
+{
+  "name": "Pest Detection Rover",
+  "description": "A comprehensive dashboard for controlling a pest detection rover, viewing live feeds, analyzing detection data, and generating reports with AI-powered insights.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}

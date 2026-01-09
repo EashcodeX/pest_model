@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./pest_detection_system
+    ports:
+      - "5001:5001"
+    environment:
+      - OLLAMA_URL=http://ollama:11434/api/generate
+    depends_on:
+      - ollama
+
+  frontend:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    # Pull the model on startup if not present (optional, or manual pull)
+    # command: serve 
+
+volumes:
+  ollama_data:
