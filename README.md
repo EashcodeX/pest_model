@@ -5,19 +5,19 @@
 ![Project Banner](https://img.shields.io/badge/Status-Live-success) ![License](https://img.shields.io/badge/License-MIT-blue) ![Python](https://img.shields.io/badge/Python-3.10-blue) ![React](https://img.shields.io/badge/React-18-blue)
 
 ## 📌 Project Overview
-This project is an advanced agricultural tool capable of detecting **102 distinct pest species** in real-time. It leverages a hybrid architecture combining **YOLOv11** for computer vision and a **Custom Fine-Tuned Large Language Model (LLM)** to provide actionable pest control advice (Chemical & Organic) instantly.
+This project is an advanced **Multi-Agent AI System** designed for autonomous agricultural pest management. It orchestrates three specialized AI agents to detect, analyze, and prescribe solutions for **102 distinct pest species** in real-time.
 
-It is designed to work in two modes:
-1.  **Rover Mode**: Integrated with an autonomous robot (Raspberry Pi/Laptop) for field scanning.
-2.  **Scanner Mode (Client-Side)**: Instantly turns any smartphone into a pest detection tool via a web browser.
+It leverages a hybrid architecture combining **YOLOv11 (Vision Agent)** and a **Custom LLM (Advisor Agent)** to provide instant, actionable intelligence to farmers.
 
 ## 🚀 Key Features
-*   **Real-Time Detection**: < 50ms inference time using YOLOv11.
+*   **🕷️ Multi-Agent Architecture**:
+    *   **Vision Agent**: YOLOv11 model detecting pests with < 50ms inference.
+    *   **Advisor Agent**: Custom Fine-Tuned LLM generating chemical/organic solutions.
+    *   **Field Agent**: The Rover/Client interface that gathers data and executes commands.
 *   **102 Pest Classes**: Comprehensive coverage of major agricultural pests.
-*   **AI Pest Advisor**: Generates instant "Control Methods" using a local LLM (Ollama).
-*   **Hybrid Architecture**: Works on Edge (Rover) and Cloud (Web App).
-*   **Scan Reports**: Generates detailed PDF-style summaries of field health.
-*   **Worldwide Access**: Securely exposed via Cloudflare Tunnels (No port forwarding needed).
+*   **Real-Time Orchestration**: Seamless data flow between Vision and Language agents.
+*   **Hybrid Deployment**: Works on Edge (Rover) and Cloud (Web App).
+*   **Worldwide Access**: Securely exposed via Cloudflare Tunnels.
 
 ## 📂 Project Structure
 
