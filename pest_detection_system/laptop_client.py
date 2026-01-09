@@ -1,3 +1,21 @@
+"""
+Pest Detection System - Backend Server
+======================================
+
+This module acts as the central processing unit for the Pest Detection System.
+It handles computer vision inference, LLM-based pest advice generation, and serves
+video telemetry to the frontend.
+
+Key Features:
+- YOLOv11 Inference: Real-time object detection for 102 pest classes.
+- LLM Integration: Connectivity to Ollama (Custom Pest-LLM) for generates control advice.
+- Hybrid Video Feed: Supports inputs from local webcam (Rover Mode) and remote clients.
+- Telemetry Streaming: Broadcasts system stats and detections via REST/JSON.
+
+Author: EashcodeX
+Date: 2025
+"""
+
 import cv2
 import numpy as np
 import time
@@ -19,7 +37,7 @@ MODEL_PATH = 'model.pt' # Will fall back to yolov8n.pt if not found
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1:latest")
 
-# Global State
+# Global State to share data between Inference Thread and Flask Server
 latest_frame = None
 latest_telemetry = {
     "timestamp": 0,
@@ -41,6 +59,13 @@ app = Flask(__name__)
 CORS(app)
 
 def load_model():
+    """
+    Loads the YOLO object detection model.
+    Checks for a custom 'model.pt' first, falling back to 'yolov8n.pt'.
+    
+    Returns:
+        YOLO: Loaded model instance.
+    """
     if os.path.exists(MODEL_PATH):
         print(f"Loading custom model from {MODEL_PATH}...")
         return YOLO(MODEL_PATH)
@@ -49,6 +74,15 @@ def load_model():
         return YOLO('yolov8n.pt')
 
 def get_system_stats(inference_time):
+    """
+    Collects system performance metrics.
+    
+    Args:
+        inference_time (float): The time taken for the last inference pass.
+        
+    Returns:
+        dict: Usage stats for CPU, Memory, Disk, and calculated FPS.
+    """
     return {
         "cpuTemp": 0, 
         "cpuUsage": psutil.cpu_percent(),
@@ -58,6 +92,13 @@ def get_system_stats(inference_time):
     }
 
 def get_ai_insight(pest_name):
+    """
+    Queries the Local LLM (Ollama) for control advice regarding a detected pest.
+    Updates the global `current_insight` variable.
+    
+    Args:
+        pest_name (str): The name of the detected pest class.
+    """
     global current_insight
     
     if pest_name in insight_cache:
@@ -83,6 +124,15 @@ def get_ai_insight(pest_name):
         print(f"Ollama Connection Failed: {e}")
 
 def generate_scan_report(pests):
+    """
+    Generates a comprehensive summary report for a list of detected pests using the LLM.
+    
+    Args:
+        pests (list): List of unique pest names found during the scan.
+        
+    Returns:
+        str: A Markdown-formatted report or error message.
+    """
     if not pests:
         return "No pests detected during the scan."
     
@@ -105,6 +155,13 @@ def generate_scan_report(pests):
 
 @app.route('/control', methods=['POST'])
 def control():
+    """
+    API Endpoint to control the scanning state.
+    
+    Commands:
+    - START_SCAN: Resets findings and begins tracking.
+    - STOP_SCAN: Stops tracking, generates report, and returns findings.
+    """
     global is_scanning, scan_findings, latest_telemetry
     
     data = request.json
@@ -136,6 +193,10 @@ def control():
 
 @app.route('/detect', methods=['POST'])
 def detect_image():
+    """
+    API Endpoint for Client-Side Camera Inference.
+    Receives an image file, runs YOLO inference, and returns detections/boxes.
+    """
     if 'image' not in request.files:
         return jsonify({"error": "No image provided"}), 400
     
@@ -203,6 +264,10 @@ CLASS_NAMES = [
 ]
 
 def inference_thread():
+    """
+    Background Thread that runs the Main Inference Loop (for Rover Mode).
+    Captures video from the local device, runs YOLO, and updates the global `latest_frame`.
+    """
     global latest_frame, latest_telemetry, current_insight, is_scanning, scan_findings
     
     model = load_model()
@@ -293,6 +358,9 @@ def inference_thread():
         time.sleep(0.001)
 
 def generate_frames():
+    """
+    Generator function that yields JPEG frames for the video stream.
+    """
     while True:
         with lock:
             if latest_frame is None:
@@ -308,6 +376,10 @@ def generate_frames():
 
 @app.route('/video_feed')
 def video_feed():
+    """
+    Route for the Motion JPEG (MJPEG) video streaming.
+    Includes anti-caching headers to reduce latency.
+    """
     response = Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     response.headers['Pragma'] = 'no-cache'
@@ -316,6 +388,9 @@ def video_feed():
 
 @app.route('/telemetry')
 def get_telemetry():
+    """
+    Route to get real-time JSON telemetry (stats, detections, AI insights).
+    """
     with lock:
         return jsonify(latest_telemetry)
 

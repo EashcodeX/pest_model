@@ -4,6 +4,15 @@ import { piService } from '../services/piService';
 import { getBackendBaseUrl } from '../services/backendConfig';
 import { TelemetryFrame, BoundingBox } from '../types';
 
+/**
+ * LiveFeed Component
+ * 
+ * The main dashboard for the Pest Detection System. It handles:
+ * 1. Video streaming from either the Rover (Backend) or Client Device.
+ * 2. Real-time inference visualization (bounding boxes).
+ * 3. Displaying system telemetry (CPU, RAM, FPS).
+ * 4. Rendering AI insights and scan reports.
+ */
 const LiveFeed: React.FC = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [showOverlay, setShowOverlay] = useState(true);
@@ -25,7 +34,10 @@ const LiveFeed: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Connect to Pi Service (backed by selected telemetry server: Mac or Pi)
+  /**
+   * Connection Effect
+   * Subscribes to the backend telemetry stream when in 'rover' mode.
+   */
   useEffect(() => {
     piService.connect('');
 
@@ -41,7 +53,10 @@ const LiveFeed: React.FC = () => {
     };
   }, [cameraMode]);
 
-  // Client-Side Camera Logic
+  /**
+   * Initializes the Client-Side Camera (Webcam/Phone Camera).
+   * Used when 'cameraMode' is set to 'client'.
+   */
   const startClientCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -55,6 +70,7 @@ const LiveFeed: React.FC = () => {
       startInferenceLoop();
     } catch (err) {
       console.error("Error accessing camera:", err);
+      // Fallback if camera access fails
       alert("Could not access camera. Please allow permissions.");
       setCameraMode('rover');
     }
@@ -71,6 +87,11 @@ const LiveFeed: React.FC = () => {
     }
   };
 
+  /**
+   * Main Client-Side Inference Loop
+   * Captures frames from the <video> element, draws to <canvas>,
+   * and sends the blob to the Backend API for YOLO processing.
+   */
   const startInferenceLoop = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
 
@@ -121,7 +142,7 @@ const LiveFeed: React.FC = () => {
         }
       }, 'image/jpeg', 0.8);
 
-    }, 500); // Run inference every 500ms (2 FPS)
+    }, 500); // Run inference every 500ms (2 FPS) to balance load
   };
 
   useEffect(() => {
