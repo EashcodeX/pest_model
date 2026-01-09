@@ -2,9 +2,11 @@
 
 > A Hybrid Edge-AI Solution for Real-Time Agricultural Pest Management
 
-![Project Banner](https://img.shields.io/badge/Status-Live-success) ![License](https://img.shields.io/badge/License-MIT-blue) ![Python](https://img.shields.io/badge/Python-3.10-blue) ![React](https://img.shields.io/badge/React-18-blue)
+![Project Banner](https://img.shields.io/badge/Status-Live-success) [![Vercel](https://img.shields.io/badge/Vercel-Live-black?logo=vercel)](https://pest-detection-rover-qdrgukv6n-eashs-projects-efce2e6d.vercel.app) ![License](https://img.shields.io/badge/License-MIT-blue) ![Python](https://img.shields.io/badge/Python-3.10-blue) ![React](https://img.shields.io/badge/React-18-blue)
 
 ## 📌 Project Overview
+**🔴 Live Demo:** [https://pest-detection-rover-qdrgukv6n-eashs-projects-efce2e6d.vercel.app](https://pest-detection-rover-qdrgukv6n-eashs-projects-efce2e6d.vercel.app)
+
 This project is an advanced **Multi-Agent AI System** designed for autonomous agricultural pest management. It orchestrates three specialized AI agents to detect, analyze, and prescribe solutions for **102 distinct pest species** in real-time.
 
 It leverages a hybrid architecture combining **YOLOv11 (Vision Agent)** and a **Custom LLM (Advisor Agent)** to provide instant, actionable intelligence to farmers.
