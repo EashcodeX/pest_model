@@ -94,4 +94,4 @@ npm run dev
 *   **GitHub**: [EashcodeX](https://github.com/EashcodeX)
 
 ---
-*Built for the [Hackathon Name] 2025*
+*Built for the [AI IGNITE] 2026*
