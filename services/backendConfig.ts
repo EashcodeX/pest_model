@@ -9,5 +9,7 @@ export const setBackendMode = (mode: BackendMode) => {
 };
 
 export const getBackendBaseUrl = () => {
+  // Production URL (Cloudflare Tunnel)
+  // This is hardcoded to ensure Vercel deployments connect to the correct backend.
   return 'https://lovely-facilitate-front-nyc.trycloudflare.com';
 };

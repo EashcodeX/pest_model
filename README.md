@@ -11,8 +11,8 @@ It leverages a hybrid architecture combining **YOLOv11 (Vision Agent)** and a **
 
 ## 🚀 Key Features
 *   **🕷️ Multi-Agent Architecture**:
-    *   **Vision Agent**: YOLOv11 model detecting pests with < 50ms inference.
-    *   **Advisor Agent**: Custom Fine-Tuned LLM generating chemical/organic solutions.
+    *   **Vision Agent (YOLOv11)**: State-of-the-art **YOLOv11** model detecting pests with < 50ms inference.
+    *   **Advisor Agent (Custom LLM)**: Fine-Tuned LLM generating chemical/organic solutions.
     *   **Field Agent**: The Rover/Client interface that gathers data and executes commands.
 *   **102 Pest Classes**: Comprehensive coverage of major agricultural pests.
 *   **Real-Time Orchestration**: Seamless data flow between Vision and Language agents.
